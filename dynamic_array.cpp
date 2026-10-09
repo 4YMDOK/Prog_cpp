@@ -1,4 +1,6 @@
 #include <iostream>
+#include <stdexcept>
+#include <new>
 
 using namespace std;
 
@@ -9,6 +11,10 @@ private:
 
 public:
     DynamicArray(int n) {
+        if (n <= 0) {
+            throw invalid_argument("Размер массива должен быть больше нуля!");
+        }
+
         size = n;
         data = new int[size];
 
@@ -23,28 +29,25 @@ public:
 
     void set(int index, int value) {
         if (index < 0 || index >= size) {
-            cout << "Ошибка: индекс " << index << " вне границ!\n";
-            return;
+            throw out_of_range("Индекс выходит за границы массива!");
         }
 
         if (value < -100 || value > 100) {
-            cout << "Ошибка: значение должно быть от -100 до 100!\n";
-            return;
+            throw invalid_argument("Значение должно быть в диапазоне от -100 до 100!");
         }
 
         data[index] = value;
     }
 
-    int get(int index) {
+    int get(int index) const {
         if (index < 0 || index >= size) {
-            cout << "Ошибка: индекс " << index << " вне границ!\n";
-            return -1;
+            throw out_of_range("Индекс выходит за границы массива!");
         }
 
         return data[index];
     }
 
-    void print() {
+    void print() const {
         cout << "Массив: ";
         for (int i = 0; i < size; i++) {
             cout << data[i] << " ";
@@ -55,27 +58,47 @@ public:
 
 int main() {
     system("chcp 65001 > nul");
+
     int n;
     cout << "Введите размер массива: ";
     cin >> n;
 
-    DynamicArray arr(n);
+    DynamicArray* arr = nullptr;
+    try {
+        arr = new DynamicArray(n);
+    } catch (const bad_alloc& e) {
+        cout << "Ошибка выделения памяти (bad_alloc): " << e.what() << "\n";
+        return 1;
+    } catch (const invalid_argument& e) {
+        cout << "Некорректный размер (invalid_argument): " << e.what() << "\n";
+        return 1;
+    }
 
     cout << "\nВведите " << n << " чисел (от -100 до 100):\n";
     for (int i = 0; i < n; i++) {
         int val;
         cout << "Элемент [" << i << "]: ";
         cin >> val;
-        arr.set(i, val);
+        try {
+            arr->set(i, val);
+        } catch (const invalid_argument& e) {
+            cout << "Ошибка: " << e.what() << "\n";
+            i--; 
+        }
     }
 
     cout << "\n";
-    arr.print();
+    arr->print();
 
     int testIndex;
-    cout << "\nВведите индекс элемента, который хотите получить: ";
+    cout << "\nВведите индекс элемента: ";
     cin >> testIndex;
-    cout << "Значение по индексу " << testIndex << ": " << arr.get(testIndex) << "\n";
+    try {
+        cout << "Значение: " << arr->get(testIndex) << "\n";
+    } catch (const out_of_range& e) {
+        cout << "Ошибка (out_of_range): " << e.what() << "\n";
+    }
 
+    delete arr;
     return 0;
 }
