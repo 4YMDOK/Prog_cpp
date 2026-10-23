@@ -1,0 +1,6 @@
+﻿*.o
+*.exe
+main
+dynamic_array
+dynamic_array.exe
+.vscode/
