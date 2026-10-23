@@ -1,39 +1,44 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
 #include "DynamicArray.h"
 
 using namespace std;
 
 int main() {
-    int n;
-    cout << "Введите размер числового массива: ";
-    cin >> n;
+    DynamicArray<int> a(3);
+    a[0] = 10;
+    a[1] = 20;
+    a[2] = 30;
 
-    DynamicArray<int> a(n);
-    cout << "Введите " << n << " чисел (от -100 до 100):\n";
-    for (int i = 0; i < n; ++i) {
-        int val;
-        cin >> val;
-        a.set(i, val);
+    cout << "A: " << a << "\n";
+
+    DynamicArray<int> b(3);
+    b[0] = 10;
+    b[1] = 20;
+    b[2] = 30;
+
+    cout << "a == b: " << (a == b) << "\n";
+    cout << "a != b: " << (a != b) << "\n";
+
+    a += 5;
+    cout << "A += 5: " << a << "\n";
+
+    a += b;
+    cout << "A += B: " << a << "\n";
+
+    a -= 2;
+    cout << "A -= 2: " << a << "\n";
+
+    cout << "for-range: ";
+    for (const auto& x : a) {
+        cout << x << " ";
     }
+    cout << "\n";
 
-    cout << "Массив A: " << a << "\n";
-
-    DynamicArray<int> b(n);
-    cout << "Введите еще " << n << " чисел для второго массива:\n";
-    for (int i = 0; i < n; ++i) {
-        int val;
-        cin >> val;
-        b.set(i, val);
+    for (auto& x : a) {
+        x += 1;
     }
-
-    cout << "Массив B: " << b << "\n";
-    cout << "Расстояние: " << a.distance(b) << "\n";
-
-    DynamicArray<string> s(2);
-    s.set(0, "hello");
-    s.set(1, "world");
-    cout << "Строковый массив: " << s << "\n";
+    cout << "after iterator: " << a << "\n";
 
     return 0;
 }

@@ -1,4 +1,4 @@
-﻿#include "DynamicArray.h"
+#include "DynamicArray.h"
 #include <string>
 
 template class DynamicArray<int>;
