@@ -1,48 +1,11 @@
-#include "DynamicArray.h"
-#include <iostream>
+﻿#include "DynamicArray.h"
+#include <string>
 
-using namespace std;
+// Явное инстанцирование шаблонного класса для используемых типов
+template class DynamicArray<int>;
+template class DynamicArray<double>;
+template class DynamicArray<std::string>;
 
-DynamicArray::DynamicArray(int n) {
-    size = n;
-    data = new int[size];
-
-    for (int i = 0; i < size; i++) {
-        data[i] = 0;
-    }
-}
-
-DynamicArray::~DynamicArray() {
-    delete[] data;
-}
-
-void DynamicArray::set(int index, int value) {
-    if (index < 0 || index >= size) {
-        cout << "Ошибка: индекс " << index << " вне границ!\n";
-        return;
-    }
-
-    if (value < -100 || value > 100) {
-        cout << "Ошибка: значение должно быть от -100 до 100!\n";
-        return;
-    }
-
-    data[index] = value;
-}
-
-int DynamicArray::get(int index) {
-    if (index < 0 || index >= size) {
-        cout << "Ошибка: индекс " << index << " вне границ!\n";
-        return -1;
-    }
-
-    return data[index];
-}
-
-void DynamicArray::print() {
-    cout << "Массив: ";
-    for (int i = 0; i < size; i++) {
-        cout << data[i] << " ";
-    }
-    cout << "\n";
-}
+template double distance<int>(const DynamicArray<int>&, const DynamicArray<int>&);
+template double distance<double>(const DynamicArray<double>&, const DynamicArray<double>&);
+template double distance<std::string>(const DynamicArray<std::string>&, const DynamicArray<std::string>&);
