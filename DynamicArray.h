@@ -1,10 +1,7 @@
-﻿#ifndef DYNAMIC_ARRAY_H
+#ifndef DYNAMIC_ARRAY_H
 #define DYNAMIC_ARRAY_H
 
 #include <iostream>
-#include <stdexcept>
-#include <type_traits>
-#include <typeinfo>
 #include <cmath>
 
 template <typename T>
@@ -14,10 +11,10 @@ private:
     int size;
 
 public:
-    explicit DynamicArray(int n) : data(nullptr), size(n) {
-        if (n <= 0) {
-            throw std::invalid_argument("Error");
-        }
+    using iterator = T*;
+    using const_iterator = const T*;
+
+    explicit DynamicArray(int n) : size(n) {
         data = new T[size]();
     }
 
@@ -25,7 +22,7 @@ public:
         delete[] data;
     }
 
-    DynamicArray(const DynamicArray& other) : data(nullptr), size(other.size) {
+    DynamicArray(const DynamicArray& other) : size(other.size) {
         data = new T[size]();
         for (int i = 0; i < size; ++i) {
             data[i] = other.data[i];
@@ -66,83 +63,35 @@ public:
     }
 
     void set(int index, const T& value) {
-        if (index < 0 || index >= size) {
-            throw std::out_of_range("Error");
-        }
-
-        if constexpr (std::is_integral_v<T>) {
-            if constexpr (std::is_signed_v<T>) {
-                if (value > 100 || value < -100) {
-                    throw std::invalid_argument("Error");
-                }
-            } else {
-                if (value > 100) {
-                    throw std::invalid_argument("Error");
-                }
-            }
-        }
-
         data[index] = value;
     }
 
     const T& get(int index) const {
-        if (index < 0 || index >= size) {
-            throw std::out_of_range("Error");
-        }
         return data[index];
     }
 
     T& get(int index) {
-        if (index < 0 || index >= size) {
-            throw std::out_of_range("Error");
-        }
+        return data[index];
+    }
+
+    T& operator[](int index) {
         return data[index];
     }
 
     const T& operator[](int index) const {
-        return get(index);
+        return data[index];
     }
 
-    T& operator[](int index) {
-        return get(index);
-    }
-
-    friend std::ostream& operator<<(std::ostream& os, const DynamicArray<T>& arr) {
-        os << "[";
-        for (int i = 0; i < arr.size; ++i) {
-            os << arr.data[i];
-            if (i < arr.size - 1) {
-                os << ", ";
+    bool operator==(const DynamicArray<T>& other) const {
+        if (size != other.size) {
+            return false;
+        }
+        for (int i = 0; i < size; ++i) {
+            if (data[i] != other.data[i]) {
+                return false;
             }
         }
-        os << "]";
-        return os;
+        return true;
     }
 
-    void print() const {
-        std::cout << *this << "\n";
-    }
-
-    double distance(const DynamicArray<T>& other) const {
-        if constexpr (!std::is_arithmetic_v<T>) {
-            throw std::bad_typeid();
-        } else {
-            if (size != other.size) {
-                throw std::invalid_argument("Error");
-            }
-            double sum = 0.0;
-            for (int i = 0; i < size; ++i) {
-                double diff = static_cast<double>(data[i]) - static_cast<double>(other.data[i]);
-                sum += diff * diff;
-            }
-            return std::sqrt(sum);
-        }
-    }
-};
-
-template <typename T>
-double distance(const DynamicArray<T>& a, const DynamicArray<T>& b) {
-    return a.distance(b);
-}
-
-#endif
+    bool operator!=(const DynamicArray<T>& other
