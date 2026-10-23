@@ -1,7 +1,6 @@
 ﻿#include "DynamicArray.h"
 #include <string>
 
-// Явное инстанцирование шаблонного класса для используемых типов
 template class DynamicArray<int>;
 template class DynamicArray<double>;
 template class DynamicArray<std::string>;
