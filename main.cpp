@@ -1,31 +1,24 @@
 #include <iostream>
+#include <windows.h>
 #include "DynamicArray.h"
 
 using namespace std;
 
 int main() {
-    system("chcp 65001 > nul");
-    int n;
-    cout << "Введите размер массива: ";
-    cin >> n;
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
 
-    DynamicArray arr(n);
+    DynamicArray arr(3);
+    arr.set(0, 10);
+    arr.set(1, 20);
+    arr.set(2, 30);
 
-    cout << "\nВведите " << n << " чисел (от -100 до 100):\n";
-    for (int i = 0; i < n; i++) {
-        int val;
-        cout << "Элемент [" << i << "]: ";
-        cin >> val;
-        arr.set(i, val);
-    }
-
-    cout << "\n";
     arr.print();
+    cout << "Размер: " << arr.getSize() << "\n";
+    cout << "Элемент 1: " << arr.get(1) << "\n";
 
-    int testIndex;
-    cout << "\nВведите индекс элемента, который хотите получить: ";
-    cin >> testIndex;
-    cout << "Значение по индексу " << testIndex << ": " << arr.get(testIndex) << "\n";
+    DynamicArray copyArr = arr;
+    copyArr.print();
 
     return 0;
 }

@@ -1,14 +1,8 @@
 #include "DynamicArray.h"
-#include <iostream>
 
-using namespace std;
-
-DynamicArray::DynamicArray(int n) {
-    size = n;
-    data = new int[size];
-
-    for (int i = 0; i < size; i++) {
-        data[i] = 0;
+DynamicArray::DynamicArray(int n) : data(nullptr), size(n) {
+    if (size > 0) {
+        data = new int[size]();
     }
 }
 
@@ -16,33 +10,54 @@ DynamicArray::~DynamicArray() {
     delete[] data;
 }
 
+DynamicArray::DynamicArray(const DynamicArray& other) : data(nullptr), size(other.size) {
+    if (size > 0) {
+        data = new int[size]();
+        for (int i = 0; i < size; ++i) {
+            data[i] = other.data[i];
+        }
+    }
+}
+
+DynamicArray& DynamicArray::operator=(const DynamicArray& other) {
+    if (this == &other) {
+        return *this;
+    }
+
+    int* newData = nullptr;
+    if (other.size > 0) {
+        newData = new int[other.size]();
+        for (int i = 0; i < other.size; ++i) {
+            newData[i] = other.data[i];
+        }
+    }
+
+    delete[] data;
+    data = newData;
+    size = other.size;
+
+    return *this;
+}
+
+int DynamicArray::getSize() const {
+    return size;
+}
+
 void DynamicArray::set(int index, int value) {
-    if (index < 0 || index >= size) {
-        cout << "Ошибка: индекс " << index << " вне границ!\n";
-        return;
-    }
-
-    if (value < -100 || value > 100) {
-        cout << "Ошибка: значение должно быть от -100 до 100!\n";
-        return;
-    }
-
     data[index] = value;
 }
 
-int DynamicArray::get(int index) {
-    if (index < 0 || index >= size) {
-        cout << "Ошибка: индекс " << index << " вне границ!\n";
-        return -1;
-    }
-
+int DynamicArray::get(int index) const {
     return data[index];
 }
 
-void DynamicArray::print() {
-    cout << "Массив: ";
-    for (int i = 0; i < size; i++) {
-        cout << data[i] << " ";
+void DynamicArray::print() const {
+    std::cout << "[";
+    for (int i = 0; i < size; ++i) {
+        std::cout << data[i];
+        if (i < size - 1) {
+            std::cout << ", ";
+        }
     }
-    cout << "\n";
+    std::cout << "]\n";
 }
