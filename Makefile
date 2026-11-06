@@ -1,10 +1,20 @@
+CXX = g++
+CXXFLAGS = -std=c++17 -Wall -Wextra
+ASANFLAGS = -fsanitize=address -g
+
 all: main
 
 main: main.o DynamicArray.o
-	g++ main.o DynamicArray.o -o main
+	$(CXX) $(CXXFLAGS) main.o DynamicArray.o -o main
 
 main.o: main.cpp
-	g++ -c main.cpp
+	$(CXX) $(CXXFLAGS) -c main.cpp
 
 DynamicArray.o: DynamicArray.cpp
-	g++ -c DynamicArray.cpp
+	$(CXX) $(CXXFLAGS) -c DynamicArray.cpp
+
+asan:
+	$(CXX) $(CXXFLAGS) $(ASANFLAGS) main.cpp DynamicArray.cpp -o main_asan
+
+clean:
+	rm -f *.o main main.exe main_asan main_asan.exe
